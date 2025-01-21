@@ -12,6 +12,59 @@
   <body>
 
     <section id='main' data-include-format="markdown" data-include="documentation/main.md"></section>
+
+    <section>
+        <h2>SPARQL Query Results</h2>
+        <pre id="query-results">Loading...</pre>
+      </section>
+  
+      <script type="module">
+        import * as rdf from "https://cdn.jsdelivr.net/npm/rdflib@2.2.1/dist/rdflib.min.js";
+  
+        // URL of the Turtle file
+        const turtleFileUrl = "https://raw.githubusercontent.com/bequrios/onto/refs/heads/main/onto.ttl";
+  
+        // SPARQL query
+        const sparqlQuery = `
+          SELECT ?subject ?predicate ?object
+          WHERE {
+            ?subject ?predicate ?object.
+          }
+        `;
+  
+        async function queryTurtleFile() {
+          const store = rdf.graph();
+  
+          try {
+            // Fetch the Turtle file
+            const response = await fetch(turtleFileUrl);
+            const turtleData = await response.text();
+  
+            // Parse the Turtle data into the RDF graph
+            rdf.parse(turtleData, store, turtleFileUrl, "text/turtle");
+  
+            // Execute the SPARQL query
+            const query = rdf.SPARQLToQuery(sparqlQuery, false, store);
+            const results = store.query(query);
+  
+            // Format and display the results
+            const resultsContainer = document.getElementById("query-results");
+            resultsContainer.textContent = results
+              .map(
+                (result) =>
+                  `${result["?subject"].value} - ${result["?predicate"].value} - ${result["?object"].value}`
+              )
+              .join("\n");
+          } catch (error) {
+            console.error("Error querying Turtle file:", error);
+            document.getElementById("query-results").textContent =
+              "Error loading data.";
+          }
+        }
+  
+        // Query the Turtle file
+        queryTurtleFile();
+      </script>
     
    </body>
 </html>
