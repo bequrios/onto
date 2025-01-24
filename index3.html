@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Respec Ready Debug</title>
+    <script src="https://www.w3.org/Tools/respec/respec-w3c" async class="remove"></script>
+    <script>
+      var respecConfig = {
+        specStatus: "unofficial",
+        shortName: "example",
+        editors: [
+          {
+            name: "Your Name",
+            company: "Your Organization",
+          },
+        ],
+      };
+
+      function waitForRespec() {
+        if (window.respec && window.respec.isReady) {
+          console.log("Respec is ready!");
+        } else {
+          console.log("Waiting for Respec...");
+          setTimeout(waitForRespec, 100);
+        }
+      }
+      waitForRespec();
+    </script>
+  </head>
+  <body>
+    <section id="abstract">
+      <h2>Abstract</h2>
+      <p>This is a test for Respec readiness.</p>
+    </section>
+  </body>
+</html>
